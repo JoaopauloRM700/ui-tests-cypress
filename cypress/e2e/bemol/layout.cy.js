@@ -75,7 +75,7 @@ describe("Componentes visíveis da interface — Bemol", () => {
             .should("not.eq", "/");
     });
 
-    it.only("Deve abrir o menu hambúrguer (mobile) e exibir categorias", () => {
+    it("Deve abrir o menu hambúrguer (mobile) e exibir categorias", () => {
         cy.viewport(390, 844); // resolução típica de smartphone
         cy.visit("/");
 
@@ -95,6 +95,23 @@ describe("Componentes visíveis da interface — Bemol", () => {
             });
     });
 
+    it("Deve exibir o footer com links visíveis", () => {
+      cy.viewport(1366, 768);
+      cy.visit("/");
+
+      // Ancora no container do footer (mais estável do que procurar por texto)
+      cy.get('div.vtex-flex-layout-0-x-flexRow--footerRow1')
+        .should("exist")
+        .scrollIntoView()
+        .should("be.visible")
+        .within(() => {
+          // Garante que existe navegação no footer (links clicáveis)
+          cy.get('a[href]')
+            .filter(":visible")
+            .its("length")
+            .should("be.greaterThan", 0);
+        });
+    });
 
     afterEach(() => {
         // Limpa a aba para interromper scripts/requisições do site e reduzir consumo de memória
